@@ -3,18 +3,28 @@
   <head>
     <style type="text/css">
       html, body { height: 100%; margin: 0; padding: 0; }
-      #map { height: 100%; }
+      #map { height: 100%; height: 800px; }
     </style>
   </head>
   <body>
-    <div id="map"></div>
+    <div id="contents">
+        <div id="search">
+            国土数値情報：
+            <select id="select_ksj">
+                <option value=""></option>
+                <option value="park">都市公園（平成23年度データ）</option>
+                <option value="public_facility">公共施設（平成18年度データ）</option> 
+            </select>
+        </div>
+        <div id="map"></div>
+    </div>
     <script type="text/javascript">
 function initMap() {
-    loadGMap("map", null, new Array())
+    loadGMap("map", null)
 }
     </script>
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI9EpED2IBq5LrsOl1pbOAl3cWRFbyZ60&callback=initMap">
+      src="https://maps.googleapis.com/maps/api/js?key=api_key&callback=initMap">
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="static/js/gmap.js"></script>

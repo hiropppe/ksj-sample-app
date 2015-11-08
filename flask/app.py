@@ -10,11 +10,11 @@ app = Flask(__name__)
 mongo = pymongo.MongoClient(host="192.168.1.10", port=27017)
 geo_point = mongo.test.geo_point
 
-@app.route("/")
+@app.route("/geo")
 def index():
     return render_template("index.html")
 
-@app.route("/spot/find")
+@app.route("/geo/find")
 def find_spot():
     ksj_class = request.args.get("ksj_class", "")
     ne = request.args.get("ne", "")
@@ -44,9 +44,9 @@ def find_spot():
                 }
             }
         }
-
+    
     page = 1
-    hit = 100
+    hit = 1000
     docs = [render.populate(doc) for doc in geo_point.find(q).skip((page-1)*hit).limit(hit)]
     return jsonify(ResultSet=docs)
 

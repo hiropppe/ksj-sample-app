@@ -21,6 +21,7 @@ def parse(data, point_dict):
 
     json = {
         "ksj_id": ksj_id,
+        "ksj_class": "park",
         "point_id": point_id,
         "point": {
             "type": "Point",

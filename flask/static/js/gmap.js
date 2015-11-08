@@ -1,15 +1,9 @@
 /**
  * GoogleMapの表示
- * @param {String} id 表示領域ID
- * @param {Object} option google.maps.Mapに設定するオプション
- * @param {Object} markerArray マーカーデータ配列
- * @param {Object} isNumberPin 番号付きマーカーで表示するか
  */
-var loadGMap = function(id, option, markerArray){
+var loadGMap = function(id, option){
   /**
    * マーカーのクリックイベントリスナーの登録
-   * @param {google.maps.Marker} marker マーカーオブジェクト
-   * @param {Object} markerData マーカーに設定する情報ウィンドウデータ
    */
   var setMarkerClickListener = function(marker, markerData) {
     google.maps.event.addListener(marker, 'click', function(event) {
@@ -28,22 +22,18 @@ var loadGMap = function(id, option, markerArray){
   
   /**
    * マーカーデータのセット
-   * @param {Object} makerArray マーカーデータ
    */
-  var setMarkerData = function(makerArray) {
-
-    // 登録データ分のマーカーを作成
-    for (var i = 0; i < makerArray.length; i++) {
+  var setMarkerData = function(markerArray) {
+    for (var i = 0; i < markerArray.length; i++) {
       var marker = new google.maps.Marker({
-        position: makerArray[i].position,
-        title: makerArray[i].title,
+        position: markerArray[i].position,
+        title: markerArray[i].title,
         map: gmap,
         icon: null,
         shadow: null
       });
-
-      // マーカーのclickリスナー登録
-      setMarkerClickListener(marker, makerArray[i], true);
+      markers.push(marker) 
+      setMarkerClickListener(marker, markerArray[i], true);
     }
   }; 
  
@@ -52,13 +42,11 @@ var loadGMap = function(id, option, markerArray){
    */
   var clearMarkerData = function(){
     var i;
-    //表示中のマーカーがあれば削除
-    if(markerArray.length > 0){
-      //マーカー削除
-      for ( i = 0; i <  markerArray.length; i++) {
-        markerArray[i].setMap();
+    if(markers.length > 0){
+      for ( i = 0; i <  markers.length; i++) {
+        markers[i].setMap(null);
       }
-      markerArray.length = 0;
+      markers.length = 0;
     }
   }
     
@@ -66,20 +54,19 @@ var loadGMap = function(id, option, markerArray){
    * マーカーのリフレッシュ 
    */
   var refleshMarker = function(){
-    //リストの内容を削除
-    $('#marker_list > ol').empty();
-  
-    //マーカー削除
     clearMarkerData();
+    
+    //国土数値情報データ
+    var ksjClass = $("#select_ksj").val()
     
     //地図の表示範囲を取得
     var bounds = gmap.getBounds();
     var northEastLatLng = bounds.getNorthEast();
     var southWestLatLng = bounds.getSouthWest();
 
-    //jsonファイルの取得
+    //国土数値情報の照会
     $.ajax({
-      url: '/spot/find?ne='+northEastLatLng.lat()+','+northEastLatLng.lng()+'&sw='+southWestLatLng.lat()+','+southWestLatLng.lng(),
+      url: '/geo/find?ksj_class='+ksjClass+'&ne='+northEastLatLng.lat()+','+northEastLatLng.lng()+'&sw='+southWestLatLng.lat()+','+southWestLatLng.lng(),
       type: 'GET',
       dataType: 'json',
       timeout: 1000,
@@ -87,7 +74,6 @@ var loadGMap = function(id, option, markerArray){
         alert("地図データの読み込みに失敗しました");
       },
       success: function(json){
-        //帰ってきた地点の数だけループ
         var markerData = new Array();
         $.each(json.ResultSet,function(){
           markerData.push({
@@ -97,12 +83,12 @@ var loadGMap = function(id, option, markerArray){
           });
         });
       
-        // マーカーデータをセット
-        if(markerArray){
+        if(markerData){
           setMarkerData(markerData);
         }      
       }
     });    
+    console.debug()
   }
  
   option = option ? option : {};
@@ -122,12 +108,17 @@ var loadGMap = function(id, option, markerArray){
 
   var openInfoWindow;  
   
-  if(markerArray){
-    setMarkerData(markerArray);
-  }
+  var markers = new Array();
 
   // 地図変更時のリスナーの追加
   google.maps.event.addListener(gmap, 'idle', function(){
     refleshMarker();
   })
+
+  // 表示国土数値情報データの変更イベントリスナー
+  $(function() {
+    $("select#select_ksj").change(function() {
+      refleshMarker()
+    });
+  });
 }
