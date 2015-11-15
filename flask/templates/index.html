@@ -9,14 +9,16 @@
   <body>
     <div id="contents">
         <div id="search">
-            国土数値情報：
-            <select id="select_ksj">
+            データ：
+            <select id="select_data">
                 <option value=""></option>
-                <option value="park">都市公園（平成23年度データ）</option>
-                <option value="public_facility">公共施設（平成18年度データ）</option> 
+                <option value="ksj_park">都市公園（平成23年度データ）</option>
+                <option value="ksj_public_facility">公共施設（平成18年度データ）</option> 
+                <option value="kcloud_tour">観光情報</option> 
             </select>
         </div>
         <div id="map"></div>
+        <div id="top-image-box"><img/></div>
     </div>
     <script type="text/javascript">
 function initMap() {
@@ -24,7 +26,7 @@ function initMap() {
 }
     </script>
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=api_key&callback=initMap">
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI9EpED2IBq5LrsOl1pbOAl3cWRFbyZ60&callback=initMap">
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="static/js/gmap.js"></script>

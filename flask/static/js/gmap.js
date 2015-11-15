@@ -17,6 +17,8 @@ var loadGMap = function(id, option){
         openInfoWindow = null;
       })
       openInfoWindow.open(marker.getMap(), marker);
+      
+      $('#top-image-box').children("img").attr({'src': '/image?data_id='+markerData.id});
     });
   };
   
@@ -57,7 +59,7 @@ var loadGMap = function(id, option){
     clearMarkerData();
     
     //国土数値情報データ
-    var ksjClass = $("#select_ksj").val()
+    var data = $("#select_data").val()
     
     //地図の表示範囲を取得
     var bounds = gmap.getBounds();
@@ -66,7 +68,7 @@ var loadGMap = function(id, option){
 
     //国土数値情報の照会
     $.ajax({
-      url: '/geo/find?ksj_class='+ksjClass+'&ne='+northEastLatLng.lat()+','+northEastLatLng.lng()+'&sw='+southWestLatLng.lat()+','+southWestLatLng.lng(),
+      url: '/geo/find?data_class='+data+'&ne='+northEastLatLng.lat()+','+northEastLatLng.lng()+'&sw='+southWestLatLng.lat()+','+southWestLatLng.lng(),
       type: 'GET',
       dataType: 'json',
       timeout: 1000,
@@ -77,7 +79,8 @@ var loadGMap = function(id, option){
         var markerData = new Array();
         $.each(json.ResultSet,function(){
           markerData.push({
-            position: new google.maps.LatLng(this.point.coordinates[1],this.point.coordinates[0]), 
+            position: new google.maps.LatLng(this.geo.coordinates[1], this.geo.coordinates[0]), 
+            id: this._id,
             title: this.name,
             content:this.name
           });
@@ -88,7 +91,6 @@ var loadGMap = function(id, option){
         }      
       }
     });    
-    console.debug()
   }
  
   option = option ? option : {};

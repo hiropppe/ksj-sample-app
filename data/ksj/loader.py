@@ -4,10 +4,9 @@ import pymongo
 
 from parser import schema 
 
-def load_data(ksj_file, ksj_name, ksj_parser):
-    mongo = pymongo.MongoClient(host="192.168.1.10", port=27017)
-    db = mongo.test
-    cl = db.geo_point
+def load_data(ksj_file, ksj_name, ksj_parser, host='192.168.1.10', port=27017, db='test', collection='geo'):
+    mongo = pymongo.MongoClient(host=host, port=port)
+    geo_collection = mongo[db][collection]
     
     point_context = etree.iterparse(
         ksj_file,
@@ -30,4 +29,4 @@ def load_data(ksj_file, ksj_name, ksj_parser):
     )
     
     for _, ksj in ksj_context:
-        cl.insert_one(ksj_parser.parse(ksj, point_dict))
+        geo_collection.insert_one(ksj_parser.parse(ksj, point_dict))
