@@ -76,6 +76,9 @@ var loadGMap = function(id, option){
         alert("地図データの読み込みに失敗しました");
       },
       success: function(json){
+        var dispjson = JSON.stringify(json, null, "    ")
+        $('#data').empty();
+        $('#data').append('<textarea cols="500" rows="1000" style="border:solid 0px #000000; color:#000000; background-color:#ffffff;" readonly>'+dispjson+'</textarea>');
         var markerData = new Array();
         $.each(json.ResultSet,function(){
           markerData.push({
