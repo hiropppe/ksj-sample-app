@@ -120,9 +120,29 @@ var loadGMap = function(id, option){
     refleshMarker();
   })
 
+  $(function() {
+    $("#start_date").datepicker();
+    $("#end_date").datepicker();
+    $("#search_button").click(function(){
+      refleshMarker();
+    });
+  });
+  
   // 表示国土数値情報データの変更イベントリスナー
   $(function() {
-    $("select#select_ksj").change(function() {
+    $("#select_data").change(function() {
+      refleshMarker()
+    });
+    $("#start_date").change(function() {
+      refleshMarker()
+    });
+    $("#end_date").change(function() {
+      refleshMarker()
+    });
+    $("#start_time").change(function() {
+      refleshMarker()
+    });
+    $("#end_time").change(function() {
       refleshMarker()
     });
   });
